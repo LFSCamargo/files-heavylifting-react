@@ -4,7 +4,6 @@ import { FileWorkerInput, FileWorkerMessage } from "../types";
 export function useFilesWorker() {
   const worker = useMemo(() => new Worker(new URL('../workers/file.ts', import.meta.url), { type: 'module'}), [])
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const splitIntoChunks = useCallback((file: File, chunkSize = 1024) => {
     return new Promise<Blob[]>((resolve, reject) => {
       worker.postMessage({

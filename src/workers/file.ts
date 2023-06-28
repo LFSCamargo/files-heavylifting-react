@@ -8,7 +8,7 @@ self.addEventListener("message", async (event: FileWorkerEventType) => {
       try {
         const { file } = event.data.input;
 
-        let chunks: Blob[] = [];
+        const chunks: Blob[] = [];
 
         for (let i = 0; i <= file.size; i += chunkSize) {
           const chunk = file.slice(i, i + chunkSize);
