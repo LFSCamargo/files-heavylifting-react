@@ -11,6 +11,13 @@ Its a simple implementation of webworkers to handle heavy lifting processing in 
 
 - Worker threads are threads that run JavaScript code in the background. And that we normally execute heavy lifting processing in the worker thread and send a event back to the main thread to update the UI.
 
+# Running the project
+
+```bash
+pnpm install
+pnpm dev
+```
+
 # Project Structure
 
 ```
