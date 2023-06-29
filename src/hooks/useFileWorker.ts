@@ -1,18 +1,12 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useRef } from "react";
 import { FileWorkerInput, FileWorkerMessage } from "../types";
 
 export function useFilesWorker() {
-  const worker = useMemo(() => new Worker(new URL('../workers/file.ts', import.meta.url), { type: 'module'}), [])
-
-  useEffect(() => {
-    return () => {
-      worker.terminate()
-    }
-  })
+  const workerRef = useRef(new Worker(new URL('../workers/file.ts', import.meta.url), { type: 'module'}));
 
   const splitIntoChunks = useCallback((file: File, chunkSize = 1024) => {
     return new Promise<Blob[]>((resolve, reject) => {
-      worker.postMessage({
+      workerRef.current.postMessage({
         type: "single_file",
         input: {
           file,
@@ -20,7 +14,7 @@ export function useFilesWorker() {
         }
       } as FileWorkerInput)
 
-      worker.addEventListener("message", (event: MessageEvent<FileWorkerMessage>) => {
+      workerRef.current.addEventListener("message", (event: MessageEvent<FileWorkerMessage>) => {
         switch (event.data.type) {
           case "done":
             console.log(event.data);
@@ -38,10 +32,10 @@ export function useFilesWorker() {
         once: true
       }); 
     });
-  }, [worker])
+  }, [])
 
   return {
-    worker,
+    worker: workerRef.current,
     handlers: {
       splitIntoChunks
     }
