@@ -1,8 +1,14 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { FileWorkerInput, FileWorkerMessage } from "../types";
 
 export function useFilesWorker() {
   const worker = useMemo(() => new Worker(new URL('../workers/file.ts', import.meta.url), { type: 'module'}), [])
+
+  useEffect(() => {
+    return () => {
+      worker.terminate()
+    }
+  })
 
   const splitIntoChunks = useCallback((file: File, chunkSize = 1024) => {
     return new Promise<Blob[]>((resolve, reject) => {
